@@ -307,7 +307,7 @@ class Point:
         :return: True if the Morton codes are equal, False otherwise.
         """
         if not isinstance(other, Point):
-            return NotImplemented
+            raise ValueError
         self.raise_error_if_not_same_dim_and_ranges(other)
         return self.get_morton_code() == other.get_morton_code()
 
@@ -319,7 +319,7 @@ class Point:
         :return: True if this Morton code is less than the other's, False otherwise.
         """
         if not isinstance(other, Point):
-            return NotImplemented
+            raise ValueError
         self.raise_error_if_not_same_dim_and_ranges(other)
         return self.get_morton_code() < other.get_morton_code()
 
@@ -331,7 +331,7 @@ class Point:
         :return: True if this Morton code is less than or equal to the other's, False otherwise.
         """
         if not isinstance(other, Point):
-            return NotImplemented
+            raise ValueError
         self.raise_error_if_not_same_dim_and_ranges(other)
         return self.get_morton_code() <= other.get_morton_code()
 
@@ -343,7 +343,7 @@ class Point:
         :return: True if this Morton code is greater than the other's, False otherwise.
         """
         if not isinstance(other, Point):
-            return NotImplemented
+            raise ValueError
         self.raise_error_if_not_same_dim_and_ranges(other)
         return self.get_morton_code() > other.get_morton_code()
 
@@ -355,7 +355,7 @@ class Point:
         :return: True if this Morton code is greater than or equal to the other's, False otherwise.
         """
         if not isinstance(other, Point):
-            return NotImplemented
+            raise ValueError
         self.raise_error_if_not_same_dim_and_ranges(other)
         return self.get_morton_code() >= other.get_morton_code()
 
@@ -367,7 +367,7 @@ class Point:
         :return: True if the Morton codes are not equal, False otherwise.
         """
         if not isinstance(other, Point):
-            return NotImplemented
+            raise ValueError
         self.raise_error_if_not_same_dim_and_ranges(other)
         return self.get_morton_code() != other.get_morton_code()
 

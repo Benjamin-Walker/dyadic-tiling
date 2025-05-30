@@ -47,6 +47,8 @@ class PointSet(AbstractSet):
 
         :param point: A Point to add to the set.
         """
+        if not isinstance(point, Point):
+            raise ValueError("Only Point objects can be added to the PointSet.")
         self.get_set().add(point)
 
     def remove(self, point: Point) -> None:

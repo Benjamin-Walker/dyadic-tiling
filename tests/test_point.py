@@ -42,12 +42,33 @@ def test_sample_point(sample_point):
     assert sample_point.get_dim() == 3
     assert sample_point.get_bits_per_dim() == 53
     assert sample_point.get_truncated_morton_code(3) == int("011101000", 2)
+    assert sample_point.get_truncated_morton_code() == sample_point.get_morton_code()
     assert sample_point.get_morton_string(3) == "011101000"
     assert (
         str(sample_point)
         == "Point(point=[0.3, 0.6, 0.8], morton_code="
         + f"{int('011101' + '000010111101' * 12 + '000011110', 2)}, dim=3)"
     )
+
+    with pytest.raises(ValueError):
+        sample_point.get_truncated_morton_code(-2)
+    with pytest.raises(ValueError):
+        sample_point.get_truncated_morton_code(100)
+
+
+def test_get_coords_morton_point():
+    point = Point(
+        70988433612780846483815379501056, dim=2
+    )  # Initialize with a Morton code
+    assert point.get_coords() == [
+        0.75,
+        0.5,
+    ]  # Assuming the Morton code corresponds to these coords
+    assert point.get_dim() == 2
+    assert point.get_bits_per_dim() == 53
+    assert point.get_morton_code() == 70988433612780846483815379501056
+    assert point.get_morton_string(1) == "11"  # Example for dim=1
+    assert point.get_morton_string(2) == "1110"  # Example for dim=2
 
 
 def test_str_fill():
@@ -90,7 +111,19 @@ def test_equality_comparison(morton_points):
     assert point_2d_1 >= point_2d_3
     assert point_2d_1 >= point_2d_3
     with pytest.raises(ValueError):
-        _ = point_2d_1 == point_1d
+        point_2d_1 == point_1d
+    with pytest.raises(ValueError):
+        point_1d == [0.5]
+    with pytest.raises(ValueError):
+        point_1d < "0.5"
+    with pytest.raises(ValueError):
+        point_1d <= 0.5
+    with pytest.raises(ValueError):
+        point_1d > [0.5]
+    with pytest.raises(ValueError):
+        point_1d >= "0.5"
+    with pytest.raises(ValueError):
+        point_1d != [0.5]
 
 
 def test_equality_comparison_level_k():
@@ -175,6 +208,13 @@ def test_comparison_at_level_zero(morton_points):
     )  # All points should be equal at level 0
 
 
+def test_comparison_invalid_op():
+    point_1 = Point([0.5, 0.75])
+    point_2 = Point([0.5, 0.75 + 2**-5])  # Adjusted for testing
+    with pytest.raises(ValueError):
+        point_1.compare_level_k(point_2, "invalid_op", 4)  # Invalid operation
+
+
 def test_copy_functionality(morton_points):
     point_2d_1, _, _, _ = morton_points
     point_copy = point_2d_1.copy()
@@ -237,6 +277,24 @@ def test_setting_new_coordinate_ranges(sample_point):
     assert old_morton_code != new_morton_code
 
 
+def test_setting_new_coordinate_ranges_for_morton_point():
+    point = Point(12345, dim=2)  # Initialize with a Morton code
+    point.set_coordinate_ranges([(0.0, 1.0), (0.0, 1.0)])
+    # Morton code should be recalculated based on new coordinate_ranges
+    old_morton_code = point.get_morton_code()
+    point.set_coordinate_ranges([(0.0, 2.0), (0.0, 2.0)])
+    new_morton_code = point.get_morton_code()
+    assert old_morton_code != new_morton_code
+
+
+def test_setting_coordinate_ranges_with_different_dimensions():
+    point = Point([0.5, 0.75], coordinate_ranges=[(0, 1), (0, 1)])
+    with pytest.raises(ValueError):
+        point.set_coordinate_ranges(
+            [(0, 1)]
+        )  # Should raise ValueError due to dimension mismatch
+
+
 def test_comparing_points_with_different_coordinate_ranges():
     point_1 = Point([0.5, 0.75], coordinate_ranges=[(0, 1), (0, 1)])
     point_2 = Point([0.5, 0.75], coordinate_ranges=[(0, 2), (0, 2)])
@@ -258,6 +316,12 @@ def test_point_coordinate_out_of_range_after_update():
     point.set_coordinates([15, 5])  # Update coordinates
     with pytest.raises(ValueError):
         point.get_morton_code()  # Should raise ValueError due to coordinate out of range
+
+
+def test_new_coordinates_wrong_dimension():
+    point = Point([5, 5], coordinate_ranges=[(0, 10), (0, 10)])
+    with pytest.raises(ValueError):
+        point.set_coordinates([5])  # Should raise ValueError due to dimension mismatch
 
 
 def test_setting_invalid_coordinate_ranges():
@@ -313,3 +377,19 @@ def test_coordinate_scaling():
 
     expected_morton_code = morton_key_from_continuous([scaled_coord])
     assert point.get_morton_code() == expected_morton_code
+
+
+def test_update_morton_code_without_coordinates():
+    point = Point(53, dim=2)  # Initialise with a Morton code
+    with pytest.raises(ValueError):
+        point.update_morton_code()
+    point.update_coordinates()
+    point.update_morton_code()  # Should not raise an error
+
+
+def test_update_coordinates_without_morton_code():
+    point = Point([0.5, 0.75], coordinate_ranges=[(0, 1), (0, 1)])
+    with pytest.raises(ValueError):
+        point.update_coordinates()
+    point.update_morton_code()
+    point.update_coordinates()  # Should not raise an error
