@@ -386,5 +386,5 @@ class Point:
 
         :return: The hash of the Point object.
         """
-        coordinate_ranges_hashable = tuple(self.coordinate_ranges)
+        coordinate_ranges_hashable = tuple(tuple(r) for r in self.coordinate_ranges)
         return hash((self.get_morton_code(), self.dim, coordinate_ranges_hashable))
