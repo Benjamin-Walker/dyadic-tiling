@@ -1,5 +1,8 @@
 # DyadicTiling
 
+[![PyPI version](https://badge.fury.io/py/dyadic-tiling.svg)](https://badge.fury.io/py/dyadic-tiling)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 > **Morton encoded dyadic cubes and points for efficient space decomposition.**
 
 DyadicTiling is a lightweight Python package for tiling spaces of arbitrary dimension with dyadic cubes. Points are organised using Morton encodings, dyadic cubes are points with a truncation level, and tilings are collections of dyadic cubes. The natural ordering from the Morton encoding allows for efficient operations, even in high-dimensions.
@@ -31,8 +34,8 @@ Requires Python ⩾ 3.8 and sortedcontainers ⩾ 2.4.
 ## ⚡ Quick‑start
 
 ```python
-from DyadicTiling.point import Point
-from DyadicTiling.dyadic_cube import DyadicCube
+from dyadic_tiling import Point
+from dyadic_tiling import DyadicCube
 
 # 1. Encode any point in [range[0][0], range[0][1]] x [range[1][0], range[1][1]]
 range = [[-3, -1], [1.1, 1.3]]
@@ -44,12 +47,12 @@ cube = p.get_containing_cube(level=2)
 print(cube)                        # DyadicCube(dim=2, level=2, morton_code=0011)
 
 # 3. Slice a PointSet by cube
-from DyadicTiling.point_set import PointSet
+from dyadic_tiling import PointSet
 cloud = PointSet([p, Point([-2.5, 1.18], coordinate_ranges=range), Point([-1.1, 1.28], coordinate_ranges=range)])
 print(cloud.in_cube(cube))         # Only points inside that square
 
 # 4. Build a stopping using DyadicCubes
-from DyadicTiling.stopping_time import DyadicCubeSetStoppingTime
+from dyadic_tiling import DyadicCubeSetStoppingTime
 rule = DyadicCubeSetStoppingTime()
 rule.add(cube)
 print(rule(p))                     # 2  (the level for the point p)

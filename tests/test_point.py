@@ -1,6 +1,6 @@
 import pytest
 
-from DyadicTiling.point import Point
+from dyadic_tiling.point import Point
 
 
 @pytest.fixture
@@ -373,7 +373,7 @@ def test_coordinate_scaling():
     point = Point([5], coordinate_ranges=[(-3, 10)])
     scaled_coord = (5 - -3) / (10 - -3)  # Expected to be 8/13
     point.update_morton_code()
-    from DyadicTiling.morton_encoding import morton_key_from_continuous
+    from dyadic_tiling.morton_encoding import morton_key_from_continuous
 
     expected_morton_code = morton_key_from_continuous([scaled_coord])
     assert point.get_morton_code() == expected_morton_code

@@ -2,9 +2,9 @@ from typing import List, Tuple, Union
 
 from sortedcontainers import SortedList
 
-from DyadicTiling.dyadic_cube import DyadicCube
-from DyadicTiling.point_set import Point, PointSet
-from DyadicTiling.sets import AbstractSet
+from dyadic_tiling.dyadic_cube import DyadicCube
+from dyadic_tiling.point_set import Point, PointSet
+from dyadic_tiling.sets import AbstractSet
 
 
 class DyadicCubeSet(AbstractSet):

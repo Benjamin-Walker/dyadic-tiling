@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dyadic-tiling"
-version = "0.1.0"
+version = "0.1.1"
 description = "Morton encoded dyadic cubes and points for efficient space decomposition."
 authors = [{ name = "Benjamin Walker", email = "mail@benwalker.co.uk" }]
 readme = "README.md"
@@ -35,3 +35,4 @@ classifiers = [
 
 [tool.setuptools.packages.find]
 where = ["."]
+include = ["dyadic_tiling*"]

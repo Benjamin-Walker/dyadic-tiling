@@ -1,7 +1,7 @@
 import pytest
 
-from DyadicTiling.dyadic_cube import DyadicCube
-from DyadicTiling.point_set import Point, PointSet
+from dyadic_tiling.dyadic_cube import DyadicCube
+from dyadic_tiling.point_set import Point, PointSet
 
 
 def test_initialization():

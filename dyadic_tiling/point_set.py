@@ -2,8 +2,8 @@ from typing import List, Tuple, Union
 
 from sortedcontainers import SortedList
 
-from DyadicTiling.point import Point
-from DyadicTiling.sets import AbstractSet
+from dyadic_tiling.point import Point
+from dyadic_tiling.sets import AbstractSet
 
 
 class PointSet(AbstractSet):

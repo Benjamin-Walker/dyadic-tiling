@@ -81,7 +81,7 @@ class Point:
             scaled_coords.append(scaled_coord)
 
         # Now compute the Morton code from the scaled coordinates
-        from DyadicTiling.morton_encoding import morton_key_from_continuous
+        from dyadic_tiling.morton_encoding import morton_key_from_continuous
 
         self.morton_code = morton_key_from_continuous(scaled_coords)
 
@@ -92,7 +92,7 @@ class Point:
         if self.morton_code is None:
             raise ValueError("Morton code is not set; cannot compute coordinates.")
 
-        from DyadicTiling.morton_encoding import continuous_from_morton_key
+        from dyadic_tiling.morton_encoding import continuous_from_morton_key
 
         # Get scaled coordinates in [0,1]^d
         scaled_coords = continuous_from_morton_key(self.morton_code, self.dim)
@@ -295,7 +295,7 @@ class Point:
                 f"so the maximum level of dyadic cube is {self.bits_per_dim}."
             )
 
-        from DyadicTiling.dyadic_cube import DyadicCube
+        from dyadic_tiling.dyadic_cube import DyadicCube
 
         return DyadicCube(self.copy(), level)
 
