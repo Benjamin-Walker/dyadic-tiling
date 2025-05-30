@@ -1,10 +1,10 @@
 import pytest
 
-from DyadicTiling.dyadic_cube import DyadicCube
-from DyadicTiling.dyadic_cube_set import DyadicCubeSet
-from DyadicTiling.point import Point
-from DyadicTiling.point_set import PointSet
-from DyadicTiling.sets import FullSpace
+from dyadic_tiling.dyadic_cube import DyadicCube
+from dyadic_tiling.dyadic_cube_set import DyadicCubeSet
+from dyadic_tiling.point import Point
+from dyadic_tiling.point_set import PointSet
+from dyadic_tiling.sets import FullSpace
 
 
 def test_mortonpointset_initialization():

@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 
-from DyadicTiling.dyadic_cube_set import DyadicCube, DyadicCubeSet
-from DyadicTiling.point import Point
-from DyadicTiling.sets import AbstractSet, FullSpace
+from dyadic_tiling.dyadic_cube_set import DyadicCube, DyadicCubeSet
+from dyadic_tiling.point import Point
+from dyadic_tiling.sets import AbstractSet, FullSpace
 
 
 class AbstractStoppingTime(ABC):

@@ -5,7 +5,7 @@ from typing import Union
 
 from sortedcontainers import SortedList
 
-from DyadicTiling.point import Point
+from dyadic_tiling.point import Point
 
 
 class AbstractSet(ABC):

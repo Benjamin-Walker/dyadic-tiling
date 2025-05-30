@@ -1,6 +1,6 @@
 import pytest
 
-from DyadicTiling.morton_encoding import (
+from dyadic_tiling.morton_encoding import (
     continuous_from_morton_key,
     deinterleave_bits,
     float_to_int,

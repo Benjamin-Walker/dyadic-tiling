@@ -1,6 +1,6 @@
 from typing import Generator, List, Optional, Tuple, Union
 
-from DyadicTiling.point_set import Point, PointSet
+from dyadic_tiling.point_set import Point, PointSet
 
 
 class DyadicCube:

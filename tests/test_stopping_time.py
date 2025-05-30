@@ -2,10 +2,10 @@ import random
 
 import pytest
 
-from DyadicTiling.dyadic_cube_set import DyadicCube, DyadicCubeSet
-from DyadicTiling.point_set import Point, PointSet
-from DyadicTiling.sets import FullSpace
-from DyadicTiling.stopping_time import AbstractStoppingTime, DyadicCubeSetStoppingTime
+from dyadic_tiling.dyadic_cube_set import DyadicCube, DyadicCubeSet
+from dyadic_tiling.point_set import Point, PointSet
+from dyadic_tiling.sets import FullSpace
+from dyadic_tiling.stopping_time import AbstractStoppingTime, DyadicCubeSetStoppingTime
 
 
 class StoppingTimeTest(AbstractStoppingTime):
