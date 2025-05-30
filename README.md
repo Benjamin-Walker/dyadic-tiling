@@ -34,24 +34,25 @@ Requires Python ⩾ 3.8 and sortedcontainers ⩾ 2.4.
 from DyadicTiling.point import Point
 from DyadicTiling.dyadic_cube import DyadicCube
 
-# 1. Encode any point in [0,1]^d
-p = Point([0.3, 0.6])
-print(p.get_morton_string(4))      # → '01110100'
+# 1. Encode any point in [range[0][0], range[0][1]] x [range[1][0], range[1][1]]
+range = [[-3, -1], [1.1, 1.3]]
+p = Point([-2.3, 1.2], coordinate_ranges=range)
+print(p.get_morton_string(4))      # → '00110111' (morton code at level 4)
 
-# 2. Grab the dyadic cube that contains it at level k
+# 2. Grab the dyadic cube that contains it at level k
 cube = p.get_containing_cube(level=2)
-print(cube)                        # DyadicCube(dim=2, level=2, morton_code=1101)
+print(cube)                        # DyadicCube(dim=2, level=2, morton_code=0011)
 
 # 3. Slice a PointSet by cube
 from DyadicTiling.point_set import PointSet
-cloud = PointSet([p, Point([0.9, 0.1]), Point([0.25, 0.75])])
+cloud = PointSet([p, Point([-2.5, 1.18], coordinate_ranges=range), Point([-1.1, 1.28], coordinate_ranges=range)])
 print(cloud.in_cube(cube))         # Only points inside that square
 
-# 4. Build an adaptive stopping time on the fly
+# 4. Build a stopping using DyadicCubes
 from DyadicTiling.stopping_time import DyadicCubeSetStoppingTime
 rule = DyadicCubeSetStoppingTime()
 rule.add(cube)
-print(rule(p))                     # 2  (the level where p stopped)
+print(rule(p))                     # 2  (the level for the point p)
 ```
 
 ---
