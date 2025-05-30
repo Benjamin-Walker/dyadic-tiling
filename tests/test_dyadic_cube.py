@@ -21,6 +21,32 @@ def test_equality():
     assert cube1 != cube3
 
 
+def test_cube_comparisons():
+    c1 = DyadicCube(level=2, points=Point(0b10 << 102, 2))
+    c2 = DyadicCube(level=2, points=Point(0b11 << 102, 2))
+    assert c1 < c2
+    assert c1 <= c2
+    assert c2 > c1
+    assert c2 >= c1
+
+
+def test_repr_and_hash():
+    cube = DyadicCube(level=2, points=Point(0b10 << 102, 2))
+    repr_str = repr(cube)
+    assert isinstance(repr_str, str)
+    hash_val = hash(cube)
+    assert isinstance(hash_val, int)
+
+
+def test_get_data():
+    cube = DyadicCube(level=2, points=Point(0b10 << 102, 2))
+    data = cube.get_data()
+    assert data is None
+    cube.data = {"I am": "a cube"}
+    data = cube.get_data()
+    assert data == {"I am": "a cube"}
+
+
 def test_copy():
     cube = DyadicCube(level=3, points=Point(5 << 100, 2))
     cube_copy = cube.copy()
@@ -69,13 +95,16 @@ def test_find_intersection():
     cube2 = DyadicCube(level=3, points=Point(0b000101 << 100, 2))
     cube3 = DyadicCube(level=3, points=Point(0b000110 << 100, 2))
     cube4 = DyadicCube(level=2, points=Point(0b0001 << 102, 2))
+    cube5 = DyadicCube(level=4, points=Point(0b001101 << 100, 2))
+    assert cube1.find_intersection(cube1) == cube1
     assert cube1.find_intersection(cube2) == cube1
     assert cube1.find_intersection(cube2) is not cube1
     assert cube1.find_intersection(cube3) is None
-    assert cube1.find_intersection(cube4) == cube4
-    assert cube1.find_intersection(cube4) is not cube4
-    assert cube4.find_intersection(cube1) == cube4
-    assert cube3.find_intersection(cube4) == cube4
+    assert cube1.find_intersection(cube4) == cube1
+    assert cube1.find_intersection(cube4) is not cube1
+    assert cube4.find_intersection(cube1) == cube1
+    assert cube3.find_intersection(cube4) == cube3
+    assert cube3.find_intersection(cube5) is None
 
 
 def test_children():

@@ -23,6 +23,7 @@ class AbstractSet(ABC):
         """
         pass
 
+    @abstractmethod
     def get_set(self) -> Union[SortedList, "AbstractSet"]:
         """
         Get the internal representation of the set.
@@ -68,6 +69,7 @@ class AbstractSet(ABC):
         """
         pass
 
+    @abstractmethod
     def in_cube(self, cube: "DyadicCube") -> "AbstractSet":
         """
         Get the subset of the set that is contained in the given DyadicCube.
@@ -77,6 +79,7 @@ class AbstractSet(ABC):
         """
         pass
 
+    @abstractmethod
     def where(self, point: Point) -> Union[AbstractSet, Point, "DyadicCube"]:
         """
         Gets the constituent of the set that contains the given point.

@@ -228,20 +228,15 @@ class DyadicCube:
             else:
                 return None
 
-        max_level = max(self_level, other_level)
-        min_level = min(self_level, other_level)
-        if (
-            self.get_morton_code() >> (max_level - min_level) * self.get_dim()
-            == other.get_morton_code()
-        ):
-            return other.copy()
-        elif (
-            other.get_morton_code() >> (max_level - min_level) * self.get_dim()
-            == self.get_morton_code()
-        ):
-            return self.copy()
+        if self_level > other_level:
+            shift = (self_level - other_level) * self.get_dim()
+            if self.get_morton_code() >> shift == other.get_morton_code():
+                return self.copy()
         else:
-            return None
+            shift = (other_level - self_level) * self.get_dim()
+            if other.get_morton_code() >> shift == self.get_morton_code():
+                return other.copy()
+        return None
 
     def children(
         self, iterable: bool = False

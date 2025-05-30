@@ -40,6 +40,11 @@ def stopping_time(omega):
 
 
 @pytest.fixture
+def full_space_stopping_time():
+    return StoppingTimeTest(FullSpace(), 0.1)
+
+
+@pytest.fixture
 def cube_level_2():
     """
     Create a DyadicCube at level 2.
@@ -86,6 +91,10 @@ def test_compute_stopping_time(point_1, stopping_time):
     assert stopping_time._compute_stopping_time(point_1) == 4
 
 
+def test_stopping_time_where(point_1, stopping_time):
+    assert stopping_time.where(point_1) == point_1
+
+
 def test_call_with_valid_point(point_1, stopping_time):
     result = stopping_time(point_1)
     assert result == 4
@@ -94,6 +103,13 @@ def test_call_with_valid_point(point_1, stopping_time):
 def test_call_with_invalid_point(stopping_time, point_2):
     with pytest.raises(ValueError, match="The point is not in Omega."):
         stopping_time(point_2)
+
+
+def test_minimal_extension_with_full_space(full_space_stopping_time):
+    extended_stopping_time = full_space_stopping_time.minimal_extension()
+    assert isinstance(extended_stopping_time.get_omega(), FullSpace)
+    assert extended_stopping_time.get_omega() == FullSpace()
+    assert extended_stopping_time.error_bound == full_space_stopping_time.error_bound
 
 
 def test_minimal_extension_with_point_inside_omega(point_1, point_2, stopping_time):
@@ -111,6 +127,10 @@ def test_minimal_extension_with_point_outside_omega(point_1, point_2, stopping_t
     assert extended_stopping_time.get_omega() == FullSpace()
     assert extended_stopping_time(point_2) == stopping_time(point_2)
     assert extended_stopping_time(point_2) == extended_stopping_time(point_1)
+    random.seed(42)  # For reproducibility
+    for _ in range(100):
+        point = Point([random.random(), random.random()])
+        extended_stopping_time(point)
 
 
 def test_stopping_time_consistency(stopping_time):
@@ -119,6 +139,18 @@ def test_stopping_time_consistency(stopping_time):
         stopping_time.get_omega().add(point)
     assert len(stopping_time.get_omega()) == 101
     assert stopping_time._test_stopping_time_is_consistent() is True
+
+
+def test_inconsistent_stopping_time():
+    class InconsistentStoppingTime(AbstractStoppingTime):
+        def _compute_stopping_time(self, point):
+            return random.randint(0, 10)
+
+    inconsistent_stopping_time = InconsistentStoppingTime(PointSet([]))
+    for _ in range(100):
+        point = Point([random.random(), random.random()])
+        inconsistent_stopping_time.get_omega().add(point)
+    assert not inconsistent_stopping_time._test_stopping_time_is_consistent()
 
 
 def test_stopping_time_with_empty_omega():
@@ -151,12 +183,22 @@ def test_stopping_time_on_boundaries(stopping_time):
     )
 
 
+def test_dyadic_cube_set_stopping_time_initialisation():
+    stopping_time = DyadicCubeSetStoppingTime()
+    assert isinstance(stopping_time.get_omega(), DyadicCubeSet)
+
+
 def test_dyadic_cube_contains_point(cube_level_2):
     inside_point = Point([0.1, 0.1])
     assert inside_point in cube_level_2
 
     outside_point = Point([0.8, 0.8])
     assert outside_point not in cube_level_2
+
+
+def test_cube_in_omega(cube_level_2, dyadic_cube_stopping_time):
+    dyadic_cube_stopping_time.add(cube_level_2)
+    assert dyadic_cube_stopping_time.check_if_cube_is_in_omega(cube_level_2)
 
 
 def test_dyadic_cube_stopping_time_membership(cube_level_2, dyadic_cube_stopping_time):

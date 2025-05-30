@@ -33,7 +33,7 @@ def test_mortonpointset_add_remove_point():
 def test_mortonpointset_add_invalid_point():
     point_1 = Point([0.5, 0.75])
     omega = PointSet([point_1])
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         omega.add([0.25, 0.25])
 
 
@@ -133,6 +133,31 @@ def test_fullspace_initialization():
     assert repr(omega) == "FullSpace()"
 
 
+def test_fullspace_get_set():
+    omega = FullSpace()
+    assert omega.get_set() == omega
+
+
+def test_fullspace_in_cube():
+    omega = FullSpace()
+    cube = DyadicCube(level=0, points=Point(0, 2))
+    assert omega.in_cube(cube) == cube
+
+    cube_1 = DyadicCube(level=1, points=Point(0b00 << 104, 2))
+    assert omega.in_cube(cube_1) == cube_1
+
+    cube_2 = DyadicCube(level=1, points=Point(0b01 << 104, 2))
+    assert omega.in_cube(cube_2) == cube_2
+
+
+def test_fullspace_where():
+    omega = FullSpace()
+    point_1 = Point([0.5, 0.75])
+    point_2 = Point([0.25, 0.25])
+    assert omega.where(point_1) == omega
+    assert omega.where(point_2) == omega
+
+
 def test_fullspace_contains_any_point():
     omega = FullSpace()
     point_1 = Point([0.5, 0.75])
@@ -166,6 +191,43 @@ def test_dyadiccubeset_initialization():
     omega = DyadicCubeSet([cube1, cube2])
     assert omega.get_set() == [cube2, cube1]
 
+    with pytest.raises(ValueError):
+        DyadicCubeSet([cube1, [0.25, 0.25]])
+
+
+def test_len_dyadiccubeset():
+    cube1 = DyadicCube(level=2, points=Point([0.5, 0.75]))
+    cube2 = DyadicCube(level=2, points=Point([0.25, 0.25]))
+    omega = DyadicCubeSet([cube1, cube2])
+    assert len(omega) == 2
+
+
+def test_get_cube_returns_correct_cube():
+    cube = DyadicCube(level=2, points=Point([0.5, 0.75]))
+    omega = DyadicCubeSet([cube])
+    assert omega.get_cube(cube) == cube
+    cube2 = DyadicCube(level=3, points=Point([0.5, 0.75]))
+    with pytest.raises(KeyError):
+        omega.get_cube(cube2)
+
+
+def test_dyadiccubeset_repr():
+    cube = DyadicCube(level=2, points=Point([0.5, 0.75]))
+    omega = DyadicCubeSet([cube])
+    repr_str = repr(omega)
+    assert isinstance(repr_str, str)
+    assert repr_str == f"DyadicCubeSet(dyadic_cubes=SortedList([{repr(cube)}]))"
+
+
+def test_dyadiccubeset_get_points_and_num_points():
+    p1 = Point([0.5, 0.75])
+    p2 = Point([0.5, 0.76])
+    cube = DyadicCube(level=3, points=PointSet([p1, p2]))
+    omega = DyadicCubeSet([cube])
+    points = omega.get_points()
+    assert p1 in points and p2 in points
+    assert omega.num_points() == 2
+
 
 def test_dyadiccubeset_add_remove_cube():
     cube1 = DyadicCube(level=2, points=Point([0.5, 0.75]))
@@ -184,6 +246,9 @@ def test_dyadiccubeset_contains_point():
     omega = DyadicCubeSet([cube1])
     assert point1 in omega
     assert point2 not in omega
+
+    with pytest.raises(TypeError):
+        0.25 in omega
 
 
 def test_dyadiccubeset_in_cube():
@@ -212,8 +277,10 @@ def test_dyadiccubeset_where_nested():
 
 
 def test_dyadiccubeset_cardinality():
+    omega = DyadicCubeSet([])
+    assert omega.get_cardinality() == 0
     cube1 = DyadicCube(level=2, points=Point([0.5, 0.75]))
-    omega = DyadicCubeSet([cube1])
+    omega.add(cube1)
     assert omega.get_cardinality() == float("inf")
 
 
@@ -227,6 +294,8 @@ def test_dyadiccubeset_equality():
 
     assert omega_1 == omega_2
     assert omega_1 != omega_3
+
+    assert omega_1 != FullSpace()
 
 
 def test_dyadiccubeset_not_equal_to_mortonpointset():
