@@ -120,7 +120,7 @@ class DyadicCubeSet(AbstractSet):
         else:
             coordinate_ranges = None
         left_idx = cubes.bisect_left(cube)
-        br = cube.bottom_right_point()
+        br = cube.max_corner()
         max_morton = 2 ** (cube.get_dim() * cube.get_a_point().get_bits_per_dim()) - 1
         if br.get_morton_code() == max_morton:
             right_idx = len(cubes)
