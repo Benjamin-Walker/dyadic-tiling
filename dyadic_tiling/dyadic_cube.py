@@ -46,13 +46,13 @@ class DyadicCube:
         :raises ValueError: If any point in the PointSet is not in the DyadicCube.
         """
 
-        tl = self.min_corner()
-        br = self.max_corner()
+        min_c = self.min_corner()
+        max_c = self.max_corner()
         sorted_points = self.get_points().get_set()
         first_point = sorted_points[0]
         last_point = sorted_points[-1]
 
-        if tl > first_point or last_point > br:
+        if min_c > first_point or last_point > max_c:
             raise ValueError("PointSet contains points outside the DyadicCube.")
 
     def get_level(self) -> int:
@@ -94,9 +94,9 @@ class DyadicCube:
 
         :param point: Point to be added
         """
-        tl = self.min_corner()
-        br = self.max_corner()
-        if tl > point or br < point:
+        min_c = self.min_corner()
+        max_c = self.max_corner()
+        if min_c > point or max_c < point:
             raise ValueError("Point outside cube")
         self.points.add(point)
 
@@ -106,12 +106,12 @@ class DyadicCube:
 
         :param points: Points to be added
         """
-        tl = self.min_corner()
-        br = self.max_corner()
+        min_c = self.min_corner()
+        max_c = self.max_corner()
         first_point = points.get_set()[0]
         last_point = points.get_set()[-1]
 
-        if tl > first_point or last_point > br:
+        if min_c > first_point or last_point > max_c:
             raise ValueError("PointSet contains points outside the DyadicCube.")
 
         self.points = self.points.merge(points)
@@ -323,10 +323,7 @@ class DyadicCube:
         self.get_a_point().raise_error_if_morton_codes_not_in_same_dim(
             other.get_a_point()
         )
-        return (
-            self.min_corner() == other.min_corner()
-            and self.level == other.level
-        )
+        return self.min_corner() == other.min_corner() and self.level == other.level
 
     def __lt__(self, other: "DyadicCube") -> bool:
         """
@@ -389,9 +386,7 @@ class DyadicCube:
         :param other: Another DyadicCube object.
         :return: True if the two DyadicCube objects are not equal; otherwise, False.
         """
-        return (
-            self.min_corner() != other.min_corner() or self.level != other.level
-        )
+        return self.min_corner() != other.min_corner() or self.level != other.level
 
     def __contains__(self, point: Point) -> bool:
         """
