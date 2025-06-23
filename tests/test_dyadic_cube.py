@@ -134,42 +134,42 @@ def test_children():
     assert children == expected_children
 
 
-def test_top_left_point():
+def test_min_corner():
     cube = DyadicCube(level=0, points=Point(0b100101 << 100, 2))
-    top_left = cube.top_left_point()
-    expected_top_left = Point(0, 2)
-    assert top_left == expected_top_left
+    min_corner = cube.min_corner()
+    expected_min_corner = Point(0, 2)
+    assert min_corner == expected_min_corner
     cube = DyadicCube(level=1, points=Point(0b100101 << 100, 2))
-    top_left = cube.top_left_point()
-    expected_top_left = Point(0b10 << 104, 2)
-    assert top_left == expected_top_left
+    min_corner = cube.min_corner()
+    expected_min_corner = Point(0b10 << 104, 2)
+    assert min_corner == expected_min_corner
     cube = DyadicCube(level=2, points=Point(0b100101 << 100, 2))
-    top_left = cube.top_left_point()
-    expected_top_left = Point(0b1001 << 102, 2)
-    assert top_left == expected_top_left
+    min_corner = cube.min_corner()
+    expected_min_corner = Point(0b1001 << 102, 2)
+    assert min_corner == expected_min_corner
     cube = DyadicCube(level=3, points=Point(0b100101 << 100, 2))
-    top_left = cube.top_left_point()
-    expected_top_left = Point(0b100101 << 100, 2)
-    assert top_left == expected_top_left
+    min_corner = cube.min_corner()
+    expected_min_corner = Point(0b100101 << 100, 2)
+    assert min_corner == expected_min_corner
 
 
-def test_bottom_right_point():
+def test_max_corner():
     cube = DyadicCube(level=0, points=Point(0b100101 << 100, 2))
-    bottom_right = cube.bottom_right_point()
-    expected_bottom_right = Point(2**106 - 1, 2)
-    assert bottom_right == expected_bottom_right
+    max_corner = cube.max_corner()
+    expected_max_corner = Point(2**106 - 1, 2)
+    assert max_corner == expected_max_corner
     cube = DyadicCube(level=1, points=Point(0b100101 << 100, 2))
-    bottom_right = cube.bottom_right_point()
-    expected_bottom_right = Point(0b10 << 104 | 2**104 - 1, 2)
-    assert bottom_right == expected_bottom_right
+    max_corner = cube.max_corner()
+    expected_max_corner = Point(0b10 << 104 | 2**104 - 1, 2)
+    assert max_corner == expected_max_corner
     cube = DyadicCube(level=2, points=Point(0b100101 << 100, 2))
-    bottom_right = cube.bottom_right_point()
-    expected_bottom_right = Point(0b1001 << 102 | 2**102 - 1, 2)
-    assert bottom_right == expected_bottom_right
+    max_corner = cube.max_corner()
+    expected_max_corner = Point(0b1001 << 102 | 2**102 - 1, 2)
+    assert max_corner == expected_max_corner
     cube = DyadicCube(level=3, points=Point(0b100101 << 100, 2))
-    bottom_right = cube.bottom_right_point()
-    expected_bottom_right = Point(0b100101 << 100 | 2**100 - 1, 2)
-    assert bottom_right == expected_bottom_right
+    max_corner = cube.max_corner()
+    expected_max_corner = Point(0b100101 << 100 | 2**100 - 1, 2)
+    assert max_corner == expected_max_corner
 
 
 def test_level_zero_cube():
@@ -177,16 +177,16 @@ def test_level_zero_cube():
     cube = DyadicCube(level=0, points=point)
     assert cube.get_lengths() == [1, 1]
     assert cube.get_diameter() == 2**0.5
-    assert cube.top_left_point() == Point(0, 2)
-    assert cube.bottom_right_point() == Point((1 << 106) - 1, 2)
+    assert cube.min_corner() == Point(0, 2)
+    assert cube.max_corner() == Point((1 << 106) - 1, 2)
 
 
 def test_high_level_cube():
     point = Point(0b1, 2)
     cube = DyadicCube(level=53, points=point)
     assert cube.get_lengths() == [2**-53, 2**-53]
-    assert cube.top_left_point() == Point(0b1 << 0, 2)
-    assert cube.bottom_right_point() == Point((0b1 << 0) | (1 << 0) - 1, 2)
+    assert cube.min_corner() == Point(0b1 << 0, 2)
+    assert cube.max_corner() == Point((0b1 << 0) | (1 << 0) - 1, 2)
 
 
 def test_no_intersection():
@@ -366,7 +366,7 @@ def test_children_pointset():
     assert child_points == expected_points
 
 
-def test_top_left_point_pointset():
+def test_min_corner_pointset():
     ps = PointSet(
         [
             Point(0b100101 << 100, 2),
@@ -374,12 +374,12 @@ def test_top_left_point_pointset():
         ]
     )
     cube = DyadicCube(level=2, points=ps)
-    top_left = cube.top_left_point()
-    expected_top_left = Point(0b1001 << 102, 2)
-    assert top_left == expected_top_left
+    min_corner = cube.min_corner()
+    expected_min_corner = Point(0b1001 << 102, 2)
+    assert min_corner == expected_min_corner
 
 
-def test_bottom_right_point_pointset():
+def test_max_corner_pointset():
     ps = PointSet(
         [
             Point(0b100101 << 100, 2),
@@ -387,9 +387,9 @@ def test_bottom_right_point_pointset():
         ]
     )
     cube = DyadicCube(level=2, points=ps)
-    bottom_right = cube.bottom_right_point()
-    expected_bottom_right = Point((0b1001 << 102) | ((1 << 102) - 1), 2)
-    assert bottom_right == expected_bottom_right
+    max_corner = cube.max_corner()
+    expected_max_corner = Point((0b1001 << 102) | ((1 << 102) - 1), 2)
+    assert max_corner == expected_max_corner
 
 
 def test_children_high_dimension_pointset():

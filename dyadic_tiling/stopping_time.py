@@ -78,7 +78,7 @@ class AbstractStoppingTime(ABC):
                 else:
                     object = subset.get_set()[0]
                     if isinstance(object, DyadicCube):
-                        object = object.top_left_point()
+                        object = object.min_corner()
                     if self(object) == k:
                         break
 

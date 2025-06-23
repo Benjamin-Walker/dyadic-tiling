@@ -46,8 +46,8 @@ class DyadicCube:
         :raises ValueError: If any point in the PointSet is not in the DyadicCube.
         """
 
-        tl = self.top_left_point()
-        br = self.bottom_right_point()
+        tl = self.min_corner()
+        br = self.max_corner()
         sorted_points = self.get_points().get_set()
         first_point = sorted_points[0]
         last_point = sorted_points[-1]
@@ -94,8 +94,8 @@ class DyadicCube:
 
         :param point: Point to be added
         """
-        tl = self.top_left_point()
-        br = self.bottom_right_point()
+        tl = self.min_corner()
+        br = self.max_corner()
         if tl > point or br < point:
             raise ValueError("Point outside cube")
         self.points.add(point)
@@ -106,8 +106,8 @@ class DyadicCube:
 
         :param points: Points to be added
         """
-        tl = self.top_left_point()
-        br = self.bottom_right_point()
+        tl = self.min_corner()
+        br = self.max_corner()
         first_point = points.get_set()[0]
         last_point = points.get_set()[-1]
 
@@ -272,9 +272,9 @@ class DyadicCube:
 
             yield child
 
-    def top_left_point(self) -> Point:
+    def min_corner(self) -> Point:
         """
-        Get the point corresponding to the top left corner of the DyadicCube object.
+        Get the point corresponding to the minimum values in each coordinate.
 
         :return: The top left of the DyadicCube object.
         """
@@ -299,9 +299,9 @@ class DyadicCube:
         mask = ((1 << self.get_dim()) - 1) << (shift - self.get_dim())
         return Point(code << shift | mask, self.get_dim(), coordinate_ranges)
 
-    def bottom_right_point(self) -> Point:
+    def max_corner(self) -> Point:
         """
-        Get the point corresponding to the bottom right corner of the DyadicCube object.
+        Get the point corresponding to the maximum values in each coordinate.
 
         :return: The bottom right of the DyadicCube object.
         """
@@ -324,7 +324,7 @@ class DyadicCube:
             other.get_a_point()
         )
         return (
-            self.top_left_point() == other.top_left_point()
+            self.min_corner() == other.min_corner()
             and self.level == other.level
         )
 
@@ -338,8 +338,8 @@ class DyadicCube:
         self.get_a_point().raise_error_if_morton_codes_not_in_same_dim(
             other.get_a_point()
         )
-        return self.top_left_point() < other.top_left_point() or (
-            self.top_left_point() == other.top_left_point() and self.level < other.level
+        return self.min_corner() < other.min_corner() or (
+            self.min_corner() == other.min_corner() and self.level < other.level
         )
 
     def __le__(self, other: "DyadicCube") -> bool:
@@ -365,8 +365,8 @@ class DyadicCube:
         self.get_a_point().raise_error_if_morton_codes_not_in_same_dim(
             other.get_a_point()
         )
-        return self.top_left_point() > other.top_left_point() or (
-            self.top_left_point() == other.top_left_point() and self.level > other.level
+        return self.min_corner() > other.min_corner() or (
+            self.min_corner() == other.min_corner() and self.level > other.level
         )
 
     def __ge__(self, other: "DyadicCube") -> bool:
@@ -390,7 +390,7 @@ class DyadicCube:
         :return: True if the two DyadicCube objects are not equal; otherwise, False.
         """
         return (
-            self.top_left_point() != other.top_left_point() or self.level != other.level
+            self.min_corner() != other.min_corner() or self.level != other.level
         )
 
     def __contains__(self, point: Point) -> bool:

@@ -99,8 +99,8 @@ class PointSet(AbstractSet):
         :param cube: A DyadicCube to check for inclusion.
         :return: A PointSet containing Points inside the DyadicCube.
         """
-        left = cube.top_left_point()
-        right = cube.bottom_right_point()
+        left = cube.min_corner()
+        right = cube.max_corner()
         points = self.get_set()
         left_idx = points.bisect_left(left)
         right_idx = points.bisect_right(right)
